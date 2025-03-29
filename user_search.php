@@ -2,6 +2,9 @@
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
 
+$stmt = $pdo->query("SELECT * FROM medicaments ORDER BY nom");
+$medicaments = $stmt->fetchAll();
+
 // Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
     header('Location: user_register.php');
@@ -30,7 +33,12 @@ if (!isset($_SESSION['user_id'])) {
         </div>
         <div class="search-container">
             <div class="form-group">
-                <input type="text" id="searchInput" placeholder="Entrez le nom du médicament...">
+                <select id="medicament" name="medicament" required>
+                    <option value="">Sélectionnez un médicament</option>
+                    <?php foreach ($medicaments as $medicament): ?>
+                        <option value="<?php echo $medicament['id']; ?>"><?php echo htmlspecialchars($medicament['nom']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
             </div>
             <div id="suggestions"></div>
             <div class="form-group">
